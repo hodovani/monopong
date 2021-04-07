@@ -1,0 +1,1 @@
+(()=>{"use strict";var o=document.querySelector("canvas"),t=o.getContext("2d");const e=new class{constructor(){}update(){console.log("Update")}};function n(c){console.log("Loop"),t.clearRect(0,0,o.width,o.height),e.update(),window.requestAnimationFrame(n)}window.onload=function(){n()}})();
