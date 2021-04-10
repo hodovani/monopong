@@ -10,11 +10,11 @@ canvas.width = smallerDimension;
 canvas.height = smallerDimension;
 
 const game = new Game({
-    size: smallerDimension
+    size: smallerDimension,
 });
 
 function render(){
-    game.update(canvas);
+    game.update({canvas});
     window.requestAnimationFrame(render);
 }
 

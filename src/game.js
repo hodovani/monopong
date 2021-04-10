@@ -6,23 +6,34 @@ import {gameState} from './gameState';
 
 export class Game {
     constructor({size}){
-        this.smallerDim = size;
-        this.R = this.smallerDim / 2;
-        this.x0 = 0.5 * this.smallerDim;
-        this.y0 = 0.5 * this.smallerDim;
+        this.size = size;
+        this.radius = this.size / 2.3;
+        this.center = this.size / 2;
+        this.x0 = this.center;
+        this.y0 = this.center;
         this.rightPressed = false;
         this.leftPressed = false;
-        this.state = gameState.PLAYING;
+        this.state = gameState.INITIAL;
 
         this.ball = new Ball(new Vector(this.x0, this.y0), new Vector(1, 1), this);
-        this.playArea = new PlayArea(this.R);
-        this.paddle = new Paddle({radius: this.R});
+        this.playArea = new PlayArea({center: this.center, radius: this.radius});
+        this.paddle = new Paddle({center: this.center, radius: this.radius});
         
         document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
         document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
     }
 
-    update(canvas){
+    update({canvas}){
+        switch(this.state){
+            case gameState.INITIAL:
+                break;
+            case gameState.PLAYING:
+                this.updatePlaying(canvas);
+                break;
+        }
+    }
+
+    updatePlaying(canvas){
         this.clearCanvas(canvas);
         // Draw current game state
         const ctx = canvas.getContext('2d');
@@ -38,7 +49,7 @@ export class Game {
             this.ball.velocity.x *= -1;
             this.ball.velocity.y *= -1;
             if(!ctx.isPointInPath(paddleSector, this.ball.position.x, this.ball.position.x)){
-                this.gameState = gameState.GAME_OVER;
+                this.state = gameState.INITIAL;
             }
         }
     }
@@ -49,20 +60,24 @@ export class Game {
     }   
 
     keyDownHandler(event) {
-        if(event.keyCode == 39) {
+        if(event.keyCode === 39) {
             this.rightPressed = true;
         }
-        else if(event.keyCode == 37) {
+        else if(event.keyCode === 37) {
             this.leftPressed = true;
         }
     }
 
     keyUpHandler(event) {
-        if(event.keyCode == 39) {
+        if(event.keyCode === 39) {
             this.rightPressed = false;
         }
-        else if(event.keyCode == 37) {
+        else if(event.keyCode === 37) {
             this.leftPressed = false;
+        }
+
+        if((event.keyCode === 39 || event.keyCode === 37) && this.state === gameState.INITIAL){
+            this.state = gameState.PLAYING;
         }
     }
 }
