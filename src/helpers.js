@@ -5,4 +5,10 @@ function degToVector({deg, speed = 1}){
     return new Vector(speed * Math.cos(deg), 2 * Math.sin(deg));
 };
 
-export {degToVector};
+function getNextPlayGameTime(){
+    const date = new Date();
+    date.setSeconds(date.getSeconds() + 3);
+    return date;
+}
+
+export {degToVector, getNextPlayGameTime};
