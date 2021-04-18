@@ -3,6 +3,8 @@ import {PlayArea} from './playArea';
 import {Paddle} from './paddle';
 import {Vector} from './vector';
 import {gameState} from './gameState';
+import {getRandomInt} from './getRandomInt';
+import {degToVector} from './helpers';
 
 export class Game {
     constructor({size}){
@@ -26,11 +28,16 @@ export class Game {
     update({canvas}){
         switch(this.state){
             case gameState.INITIAL:
+                this.updateInitialState();
                 break;
             case gameState.PLAYING:
                 this.updatePlaying(canvas);
                 break;
         }
+    }
+
+    updateInitialState(){
+        this.ball = new Ball(new Vector(this.x0, this.y0));
     }
 
     updatePlaying(canvas){
@@ -46,9 +53,11 @@ export class Game {
         this.paddle.move({leftPressed: this.leftPressed, rightPressed: this.rightPressed});
         // Check boundaries
         if(this.playArea.center.distanceTo(this.ball.position) > this.playArea.radius - this.ball.radius){
-            this.ball.velocity.x *= -1;
-            this.ball.velocity.y *= -1;
-            if(!ctx.isPointInPath(paddleSector, this.ball.position.x, this.ball.position.x)){
+            const velocityDeg = this.ball.velocity.toDeg();
+            const newVelocityDeg = velocityDeg + 180 + getRandomInt(-20, 20);
+            const newVelocity = degToVector({deg: newVelocityDeg});
+            this.ball.velocity = newVelocity;
+            if(!ctx.isPointInPath(paddleSector, this.ball.position.x, this.ball.position.y)){
                 this.state = gameState.INITIAL;
             }
         }
