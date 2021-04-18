@@ -1,5 +1,6 @@
 const gameState = {
+    COUNTING_DOWN: 'COUNTING_DOWN',
+    INITIAL: 'INITIAL',
     PLAYING: 'PLAYING',
-    GAME_OVER: 'GAME_OVER',
 };
 export {gameState};

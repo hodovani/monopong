@@ -6,4 +6,11 @@ export class Vector {
     distanceTo(vector) {
         return Math.sqrt((this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y));
     }
+    toDeg(){
+        var deltaX = this.x;
+        var deltaY = this.y;
+        var rad = Math.atan2(deltaY, deltaX); 
+        var deg = rad * (180 / Math.PI);
+        return deg;
+    }
 }
