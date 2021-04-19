@@ -11,4 +11,8 @@ function getNextPlayGameTime(){
     return date;
 }
 
-export {degToVector, getNextPlayGameTime};
+function radiansToDegrees(radians){
+    return (radians * (180/Math.PI)) % 360;
+}
+
+export {degToVector, getNextPlayGameTime, radiansToDegrees};
