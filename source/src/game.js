@@ -134,6 +134,8 @@ export class Game {
         const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
         const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
         this.touchPosition = new Vector(touchX, touchY);
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     touchEnd(){
@@ -149,6 +151,8 @@ export class Game {
         const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
         const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
         this.touchPosition = new Vector(touchX, touchY);
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     touchHandler(){

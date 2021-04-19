@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="/">
+        <title>MONOPONG</title>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+        <style>
+      		body,html {
+				height:100%;
+				width:100%;
+        		margin:0;
+        		padding:0;
+        		text-align: center;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 2rem;
+      		}
+			body, html, canvas {
+				background-color: rgb(255, 255, 255);
+			}
+			canvas {
+				width: 100vh;
+				height: 100vh;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%); 
+			}
+			@media all and (orientation: portrait) {
+				canvas {
+					width: 100vw;
+					height: 100vw;
+				}
+			}
+			.hidden {
+				display: none;
+			}
+			/* @media (prefers-color-scheme: dark) {
+				body, html, canvas {
+					background-color: rgb(0, 0, 0);
+				}
+			} */
+    	</style>
+    <script defer src="/monopong/main.js"></script></head>
+    <body>
+		<div id="counting-down">3</div>
+        <canvas></canvas>  
+    </body>
+</html>
