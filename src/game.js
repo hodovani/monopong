@@ -4,7 +4,7 @@ import {Paddle} from './paddle';
 import {Vector} from './vector';
 import {gameState} from './gameState';
 import {getRandomInt} from './getRandomInt';
-import {degToVector, getNextPlayGameTime} from './helpers';
+import {degToVector, getNextPlayGameTime, radiansToDegrees} from './helpers';
 
 export class Game {
     constructor({size, countDownElement, canvas}){
@@ -16,6 +16,8 @@ export class Game {
         this.y0 = this.center;
         this.rightPressed = false;
         this.leftPressed = false;
+        this.isTouch = false;
+        this.touchPosition = undefined;
         this.state = gameState.COUNTING_DOWN;
         this.countDown = getNextPlayGameTime();
         this.countDownElement = countDownElement;
@@ -26,6 +28,11 @@ export class Game {
         
         document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
         document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
+        document.addEventListener("touchstart", this.touchStart.bind(this), false);
+        document.addEventListener("touchmove", this.touchMove.bind(this), false);
+        document.addEventListener("touchend", this.touchEnd.bind(this), false);
+        document.addEventListener("touchcancel", this.touchEnd.bind(this), false);
+
         this.canvas.classList.add('hidden');
         this.countDownElement.classList.remove('hidden');
     }
@@ -64,6 +71,11 @@ export class Game {
 
     updatePlaying(canvas){
         this.clearCanvas(canvas);
+
+        if(this.isTouch){
+            this.touchHandler();
+        }
+
         // Draw current game state
         const ctx = canvas.getContext('2d');
         this.playArea.draw(ctx);
@@ -114,5 +126,56 @@ export class Game {
         if((event.keyCode === 39 || event.keyCode === 37) && this.state === gameState.INITIAL){
             this.state = gameState.PLAYING;
         }
+    }
+
+    touchStart(event){
+        console.log('Touch start');
+        this.isTouch = true;
+        const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
+        const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
+        this.touchPosition = new Vector(touchX, touchY);
+    }
+
+    touchEnd(){
+        console.log('Touch end');
+        this.isTouch = false;
+        this.touchPosition = undefined;
+        this.leftPressed = false;
+        this.rightPressed = false;
+    }
+
+    touchMove(event){
+        console.log('Touch move');
+        const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
+        const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
+        this.touchPosition = new Vector(touchX, touchY);
+    }
+
+    touchHandler(){
+        console.log('Touch handler');
+        const touchY = this.touchPosition.y;
+        const touchX = this.touchPosition.x;
+        let angle = Math.atan2(touchY, touchX);
+        if (angle < 0) { angle += 2 * Math.PI; }
+        const touchDeg = radiansToDegrees(angle);
+        let paddleAngle = this.paddle.angle;
+        if (paddleAngle < 0) { paddleAngle += 2 * Math.PI; }
+        const paddleDeg = radiansToDegrees(paddleAngle);
+        // console.log(touchDeg);
+        // console.log(paddleDeg);
+        let diff = (touchDeg - paddleDeg + 180) % 360 - 180;
+        if(Math.abs(diff) > 1){
+            if(Math.sign(diff) < 0){
+                this.rightPressed = true;
+                this.leftPressed = false;
+            } else {
+                this.rightPressed = false;
+                this.leftPressed = true;
+            }
+        }else {
+            this.leftPressed = false;
+            this.leftPressed = true;
+        }
+        
     }
 }
