@@ -192,6 +192,8 @@ class Game {
         const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
         const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
         this.touchPosition = new _vector__WEBPACK_IMPORTED_MODULE_3__.Vector(touchX, touchY);
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     touchEnd(){
@@ -207,6 +209,8 @@ class Game {
         const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
         const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
         this.touchPosition = new _vector__WEBPACK_IMPORTED_MODULE_3__.Vector(touchX, touchY);
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     touchHandler(){
