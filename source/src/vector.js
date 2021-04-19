@@ -1,3 +1,5 @@
+import {radiansToDegrees} from './helpers';
+
 export class Vector {
     constructor(x, y) {
         this.x = x || 0;
@@ -10,7 +12,7 @@ export class Vector {
         var deltaX = this.x;
         var deltaY = this.y;
         var rad = Math.atan2(deltaY, deltaX); 
-        var deg = rad * (180 / Math.PI);
+        var deg = radiansToDegrees(rad);
         return deg;
     }
 }
