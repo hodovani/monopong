@@ -74,6 +74,8 @@ class Game {
         this.y0 = this.center;
         this.rightPressed = false;
         this.leftPressed = false;
+        this.isTouch = false;
+        this.touchPosition = undefined;
         this.state = _gameState__WEBPACK_IMPORTED_MODULE_4__.gameState.COUNTING_DOWN;
         this.countDown = (0,_helpers__WEBPACK_IMPORTED_MODULE_6__.getNextPlayGameTime)();
         this.countDownElement = countDownElement;
@@ -84,6 +86,11 @@ class Game {
         
         document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
         document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
+        document.addEventListener("touchstart", this.touchStart.bind(this), false);
+        document.addEventListener("touchmove", this.touchMove.bind(this), false);
+        document.addEventListener("touchend", this.touchEnd.bind(this), false);
+        document.addEventListener("touchcancel", this.touchEnd.bind(this), false);
+
         this.canvas.classList.add('hidden');
         this.countDownElement.classList.remove('hidden');
     }
@@ -122,6 +129,11 @@ class Game {
 
     updatePlaying(canvas){
         this.clearCanvas(canvas);
+
+        if(this.isTouch){
+            this.touchHandler();
+        }
+
         // Draw current game state
         const ctx = canvas.getContext('2d');
         this.playArea.draw(ctx);
@@ -172,6 +184,57 @@ class Game {
         if((event.keyCode === 39 || event.keyCode === 37) && this.state === _gameState__WEBPACK_IMPORTED_MODULE_4__.gameState.INITIAL){
             this.state = _gameState__WEBPACK_IMPORTED_MODULE_4__.gameState.PLAYING;
         }
+    }
+
+    touchStart(event){
+        console.log('Touch start');
+        this.isTouch = true;
+        const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
+        const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
+        this.touchPosition = new _vector__WEBPACK_IMPORTED_MODULE_3__.Vector(touchX, touchY);
+    }
+
+    touchEnd(){
+        console.log('Touch end');
+        this.isTouch = false;
+        this.touchPosition = undefined;
+        this.leftPressed = false;
+        this.rightPressed = false;
+    }
+
+    touchMove(event){
+        console.log('Touch move');
+        const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
+        const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
+        this.touchPosition = new _vector__WEBPACK_IMPORTED_MODULE_3__.Vector(touchX, touchY);
+    }
+
+    touchHandler(){
+        console.log('Touch handler');
+        const touchY = this.touchPosition.y;
+        const touchX = this.touchPosition.x;
+        let angle = Math.atan2(touchY, touchX);
+        if (angle < 0) { angle += 2 * Math.PI; }
+        const touchDeg = (0,_helpers__WEBPACK_IMPORTED_MODULE_6__.radiansToDegrees)(angle);
+        let paddleAngle = this.paddle.angle;
+        if (paddleAngle < 0) { paddleAngle += 2 * Math.PI; }
+        const paddleDeg = (0,_helpers__WEBPACK_IMPORTED_MODULE_6__.radiansToDegrees)(paddleAngle);
+        // console.log(touchDeg);
+        // console.log(paddleDeg);
+        let diff = (touchDeg - paddleDeg + 180) % 360 - 180;
+        if(Math.abs(diff) > 1){
+            if(Math.sign(diff) < 0){
+                this.rightPressed = true;
+                this.leftPressed = false;
+            } else {
+                this.rightPressed = false;
+                this.leftPressed = true;
+            }
+        }else {
+            this.leftPressed = false;
+            this.leftPressed = true;
+        }
+        
     }
 }
 
@@ -225,7 +288,8 @@ const getRandomInt = (min, max) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "degToVector": () => (/* binding */ degToVector),
-/* harmony export */   "getNextPlayGameTime": () => (/* binding */ getNextPlayGameTime)
+/* harmony export */   "getNextPlayGameTime": () => (/* binding */ getNextPlayGameTime),
+/* harmony export */   "radiansToDegrees": () => (/* binding */ radiansToDegrees)
 /* harmony export */ });
 /* harmony import */ var _vector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vector */ "./src/vector.js");
 
@@ -239,6 +303,10 @@ function getNextPlayGameTime(){
     const date = new Date();
     date.setSeconds(date.getSeconds() + 3);
     return date;
+}
+
+function radiansToDegrees(radians){
+    return (radians * (180/Math.PI)) % 360;
 }
 
 
@@ -341,6 +409,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Vector": () => (/* binding */ Vector)
 /* harmony export */ });
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "./src/helpers.js");
+
+
 class Vector {
     constructor(x, y) {
         this.x = x || 0;
@@ -353,7 +424,7 @@ class Vector {
         var deltaX = this.x;
         var deltaY = this.y;
         var rad = Math.atan2(deltaY, deltaX); 
-        var deg = rad * (180 / Math.PI);
+        var deg = (0,_helpers__WEBPACK_IMPORTED_MODULE_0__.radiansToDegrees)(rad);
         return deg;
     }
 }
