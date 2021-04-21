@@ -90,10 +90,6 @@ class Game {
         document.addEventListener("touchmove", this.touchMove.bind(this), false);
         document.addEventListener("touchend", this.touchEnd.bind(this), false);
         document.addEventListener("touchcancel", this.touchEnd.bind(this), false);
-        document.addEventListener("scroll", (e) => {
-            e.preventDefault();
-            window.scrollTo(0, 0);
-        });
 
         this.canvas.classList.add('hidden');
         this.countDownElement.classList.remove('hidden');
