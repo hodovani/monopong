@@ -129,7 +129,6 @@ export class Game {
     }
 
     touchStart(event){
-        console.log('Touch start');
         this.isTouch = true;
         const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
         const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
@@ -139,7 +138,6 @@ export class Game {
     }
 
     touchEnd(){
-        console.log('Touch end');
         this.isTouch = false;
         this.touchPosition = undefined;
         this.leftPressed = false;
@@ -147,7 +145,6 @@ export class Game {
     }
 
     touchMove(event){
-        console.log('Touch move');
         const touchY = event.touches[0].pageY - document.body.scrollHeight/2;
         const touchX = event.touches[0].pageX - document.body.scrollWidth/2;
         this.touchPosition = new Vector(touchX, touchY);
@@ -156,7 +153,6 @@ export class Game {
     }
 
     touchHandler(){
-        console.log('Touch handler');
         const touchY = this.touchPosition.y;
         const touchX = this.touchPosition.x;
         let angle = Math.atan2(touchY, touchX);
@@ -165,8 +161,6 @@ export class Game {
         let paddleAngle = this.paddle.angle;
         if (paddleAngle < 0) { paddleAngle += 2 * Math.PI; }
         const paddleDeg = radiansToDegrees(paddleAngle);
-        // console.log(touchDeg);
-        // console.log(paddleDeg);
         let diff = (touchDeg - paddleDeg + 180) % 360 - 180;
         if(Math.abs(diff) > 1){
             if(Math.sign(diff) < 0){
