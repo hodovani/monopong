@@ -5,6 +5,9 @@ import {Vector} from './vector';
 import {gameState} from './gameState';
 import {getRandomInt} from './getRandomInt';
 import {degToVector, getNextPlayGameTime, radiansToDegrees} from './helpers';
+import style from './index.css';
+
+const hiddenClassName = style.hidden;
 
 export class Game {
     constructor({size, countDownElement, canvas}){
@@ -33,8 +36,8 @@ export class Game {
         document.addEventListener("touchend", this.touchEnd.bind(this), false);
         document.addEventListener("touchcancel", this.touchEnd.bind(this), false);
 
-        this.canvas.classList.add('hidden');
-        this.countDownElement.classList.remove('hidden');
+        this.canvas.classList.add(hiddenClassName);
+        this.countDownElement.classList.remove(hiddenClassName);
     }
 
     update({canvas}){
@@ -58,8 +61,8 @@ export class Game {
         if(currentDate < this.countDown){
             this.countDownElement.innerHTML = `${'😢'.repeat(Math.abs(seconds))}`;
         } else {
-            this.canvas.classList.remove('hidden');
-            this.countDownElement.classList.add('hidden');
+            this.canvas.classList.remove(hiddenClassName);
+            this.countDownElement.classList.add(hiddenClassName);
             this.state = gameState.INITIAL;
         }
     }
@@ -94,8 +97,8 @@ export class Game {
             if(!ctx.isPointInPath(paddleSector, this.ball.position.x, this.ball.position.y)){
                 this.clearCanvas(canvas);
                 this.countDown = getNextPlayGameTime();
-                this.canvas.classList.add('hidden');
-                this.countDownElement.classList.remove('hidden');
+                this.canvas.classList.add(hiddenClassName);
+                this.countDownElement.classList.remove(hiddenClassName);
                 this.state = gameState.COUNTING_DOWN;
             }
         }
