@@ -16,6 +16,35 @@ module.exports = {
     })
   ],
   devServer: {
-    contentBase: './dist',
+    host: '0.0.0.0',
+    port: 8080,
+    disableHostCheck: true,
+    contentBase: './src',
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: { importLoaders: 1, modules: true },
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    "postcss-preset-env"
+                  ],
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  }
 };

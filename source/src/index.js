@@ -1,4 +1,5 @@
 import { Game } from './game';
+import './index.css';
 
 const canvas = document.querySelector('canvas');
 const countDownElement = document.querySelector('#counting-down');
